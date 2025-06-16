@@ -1,0 +1,5 @@
+ms/ms-auth/build
+.idea
+build
+.gradle
+application-dev.properties
