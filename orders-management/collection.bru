@@ -1,0 +1,13 @@
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:pre-request {
+    let authToken = bru.getEnvVar("token");
+    console.log("🔐 Token che metto nell'auth generale:", authToken);
+  
+}

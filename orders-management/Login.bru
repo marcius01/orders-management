@@ -7,12 +7,26 @@ meta {
 post {
   url: http://localhost:8080/auth/login
   body: json
-  auth: inherit
+  auth: none
 }
 
 body:json {
   {
-    "email":"admin@example.com",
+    "email":"user1@example.com",
     "password":"password"
+  }
+}
+
+script:post-response {
+  let authToken = res.body.token;
+  
+  if (authToken) {
+    // Salva la variabile nell'ambiente
+    bru.setEnvVar("token", authToken);
+  
+    // Stampa il token nella console di Bruno
+    console.log("🔐 Token JWT ricevuto:", authToken);
+  } else {
+    console.warn("⚠️ Nessun token trovato nella risposta.");
   }
 }
