@@ -11,6 +11,8 @@ public enum AuthError implements ISkullError.App
     VALIDATION_ERROR(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()),
     BAD_REQUEST(HttpResponseStatus.BAD_REQUEST.code()),
     EMAIL_ALREADY_EXISTS(HttpResponseStatus.CONFLICT.code()),
+    BAD_PRINCIPAL(HttpResponseStatus.BAD_REQUEST.code()),
+    USER_NOT_FOUND(HttpResponseStatus.NOT_FOUND.code()),
     UNAUTHORIZED(HttpResponseStatus.UNAUTHORIZED.code());
 
     private final int status;

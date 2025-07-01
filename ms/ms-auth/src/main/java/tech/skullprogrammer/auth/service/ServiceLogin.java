@@ -24,6 +24,8 @@ public class ServiceLogin {
     RepositoryUser repositoryUser;
     @Inject
     MapperUtils mapperUtils;
+    @Inject
+    ServiceUtilities utilities;
 
     public LoginDTO.Out login(String email, String password) {
         User user = repositoryUser.findByEmail(email);
@@ -35,7 +37,7 @@ public class ServiceLogin {
         }
         authenticated = BcryptUtil.matches(password, user.getPassword());
         if (!authenticated) {throw SkullResourceException.builder().error(AuthError.UNAUTHORIZED).build();}
-        return new LoginDTO.Out(ServiceUtilities.generateToken(user));
+        return new LoginDTO.Out(utilities.generateToken(user));
     }
 
     @Transactional
@@ -47,6 +49,11 @@ public class ServiceLogin {
         String passwordHash = BcryptUtil.bcryptHash(userData.password());
         User user = mapperUtils.toUser(userData, passwordHash, Set.of(ERole.ROLE_USER));
         repositoryUser.persist(user);
+        return mapperUtils.toUserDTO(user);
+    }
+
+    public UserDTO.Out findUser(Long userId) {
+        User user = repositoryUser.findByIdOptional(userId).orElseThrow(() -> SkullResourceException.builder().error(AuthError.USER_NOT_FOUND).build());
         return mapperUtils.toUserDTO(user);
     }
 }
