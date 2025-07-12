@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  # Database per Kong
+  kong-db:
+    image: postgres:latest
+    container_name: kong-database
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kongpass # Usa una password più sicura in produzione
+    networks:
+      - kong-net
+    volumes:
+      - kong_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "kong"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Esegui le migrazioni del database di Kong
+  kong-migrations:
+    image: kong:latest
+    container_name: kong-migrations
+    depends_on:
+      kong-db:
+        condition: service_healthy
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-db
+      - KONG_PG_PASSWORD=kongpass
+      - KONG_PG_USER=kong
+    command: "kong migrations bootstrap"
+    networks:
+      - kong-net
+    restart: on-failure
+
+  # Il Gateway Kong vero e proprio
+  kong:
+    image: kong:latest
+    container_name: kong-gateway
+    depends_on:
+      kong-migrations:
+        condition: service_completed_successfully
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-db
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kongpass
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001 # API di amministrazione di Kong
+      - KONG_PROXY_LISTEN=0.0.0.0:8000 # Porta per il traffico pubblico
+      - KONG_PLUGINS=bundled,jwt,request-transformer # Abilita i plugin che ci servono
+    ports:
+      - "8000:8000" # Porta pubblica
+      - "8001:8001" # Porta di amministrazione
+    networks:
+      - kong-net
+    healthcheck:
+      test: ["CMD", "kong", "health"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+networks:
+  kong-net:
+    driver: bridge
+
+volumes:
+  kong_data:
