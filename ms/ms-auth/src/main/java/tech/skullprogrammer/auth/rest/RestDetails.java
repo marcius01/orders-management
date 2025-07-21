@@ -13,7 +13,7 @@ import tech.skullprogrammer.framework.core.exception.GenericErrorPayload;
 import tech.skullprogrammer.framework.core.exception.SkullResourceException;
 
 @Slf4j
-@Path("details")
+@Path("secure/details")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class RestDetails {

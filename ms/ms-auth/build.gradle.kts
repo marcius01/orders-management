@@ -12,7 +12,7 @@ dependencies {
     //To move to quarkus conventions plugin
     implementation("io.quarkus:quarkus-rest-jackson")
 
-    implementation("tech.skullprogrammer.framework:framework-core:0.1")
+    implementation("tech.skullprogrammer.framework:framework-core:0.1.1")
     implementation("io.quarkus:quarkus-hibernate-orm-panache")
     implementation("io.quarkus:quarkus-jdbc-postgresql")
     implementation("io.quarkus:quarkus-elytron-security-common")

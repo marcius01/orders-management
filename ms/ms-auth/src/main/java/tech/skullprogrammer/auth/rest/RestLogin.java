@@ -18,7 +18,7 @@ import tech.skullprogrammer.framework.core.exception.ISkullError;
 import tech.skullprogrammer.framework.core.exception.SkullResourceException;
 
 @Slf4j
-@Path("auth")
+@Path("public")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class RestLogin {
