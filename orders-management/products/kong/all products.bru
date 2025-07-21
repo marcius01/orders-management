@@ -1,0 +1,11 @@
+meta {
+  name: all products
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8000/api/v1/products/secure
+  body: none
+  auth: inherit
+}
