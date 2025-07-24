@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Builder
-public class ProductCreationRequestDTO {
+public class ProductRequestDTO {
     @NotBlank
     private String name;
     private String description;

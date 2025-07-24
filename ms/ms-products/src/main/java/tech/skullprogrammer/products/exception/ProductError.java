@@ -10,7 +10,9 @@ public enum ProductError implements ISkullError.App
 {
     VALIDATION_ERROR(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()),
     BAD_REQUEST(HttpResponseStatus.BAD_REQUEST.code()),
-    PRODUCT_ALREADY_EXISTS(HttpResponseStatus.CONFLICT.code());
+    INSUFFICIENT_STOCK(HttpResponseStatus.CONFLICT.code()),
+    PRODUCT_ALREADY_EXISTS(HttpResponseStatus.CONFLICT.code()),
+    PRODUCT_NOT_FOUND(HttpResponseStatus.NOT_FOUND.code());
 
     private final int status;
 
