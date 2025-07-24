@@ -1,0 +1,17 @@
+meta {
+  name: adjust product stock
+  type: http
+  seq: 7
+}
+
+delete {
+  url: http://localhost:8000/api/v1/products/secure/2/stock
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+        "quantity": 1
+  }
+}
