@@ -16,6 +16,14 @@ curl -i -X POST http://localhost:8001/services \
   --data name=public-product-service \
   --data url='http://host.docker.internal:8081/public'
 
+curl -i -X POST http://localhost:8001/services \
+  --data name=secure-order-service \
+  --data url='http://host.docker.internal:8082/secure'
+
+curl -i -X POST http://localhost:8001/services \
+  --data name=public-order-service \
+  --data url='http://host.docker.internal:8082/public'
+
 ## Add Route
 
 curl -i -X POST http://localhost:8001/services/secure-auth-service/routes \
@@ -34,6 +42,14 @@ curl -i -X POST http://localhost:8001/services/public-product-service/routes \
   --data name=public-product-route \
   --data 'paths[]=/api/v1/products/public'
 
+curl -i -X POST http://localhost:8001/services/secure-order-service/routes \
+  --data name=secure-order-route \
+  --data 'paths[]=/api/v1/orders/secure'
+
+curl -i -X POST http://localhost:8001/services/public-order-service/routes \
+  --data name=public-order-route \
+  --data 'paths[]=/api/v1/orders/public'
+
 ## JWT Consumer Creation
 
 curl -i -X POST http://localhost:8001/consumers \
@@ -41,9 +57,6 @@ curl -i -X POST http://localhost:8001/consumers \
 
 ## Set Public Key To Consumer
 
-PUBLIC_KEY_CONTENT=$(cat src/main/resources/publicKey.pem)
-
-# Prima, come prima, metti la chiave pubblica in una variabile
 PUBLIC_KEY_CONTENT=$(cat src/main/resources/publicKey.pem)
 
 # Ora esegui il comando completo
@@ -58,7 +71,10 @@ curl -i -X POST http://localhost:8001/services/secure-auth-service/plugins \
   --data "name=jwt"
 
 curl -i -X POST http://localhost:8001/services/secure-product-service/plugins \
-  --data "name=jwt"
+  --data "name=jwt" \
   --data "config.claims_to_headers=sub:X-User-Id,groups:X-User-Groups"
+
+curl -i -X POST http://localhost:8001/services/secure-order-service/plugins \
+--data "name=jwt"
 
 ## Transformer can't extract claims from jwt token

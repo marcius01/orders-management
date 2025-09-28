@@ -62,6 +62,49 @@ services:
       timeout: 10s
       retries: 10
 
+  # Zookeeper: il coordinatore per Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.2
+    container_name: zookeeper
+    networks:
+      - kong-net # Usa la stessa rete degli altri servizi
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  # Kafka Broker: la nostra "bacheca degli annunci"
+  kafka:
+    image: confluentinc/cp-kafka:7.3.2
+    container_name: kafka
+    networks:
+      - kong-net
+    depends_on:
+      - zookeeper
+    ports:
+      # Porta esposta all'esterno per i nostri servizi Quarkus
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      # Questo è fondamentale: dice a Kafka come gli altri servizi possono trovarlo
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  # Kafdrop: una comoda interfaccia web per esplorare Kafka
+  kafdrop:
+    image: obsidiandynamics/kafdrop:latest
+    container_name: kafdrop
+    networks:
+      - kong-net
+    depends_on:
+      - kafka
+    ports:
+      - "9000:9000" # Porta per accedere all'interfaccia web
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092" # Dice a Kafdrop come trovare Kafka all'interno della rete Docker
+      
 networks:
   kong-net:
     driver: bridge
