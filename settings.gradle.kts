@@ -58,3 +58,5 @@ dependencyResolutionManagement {
 rootProject.name = "orders-management"
 include("ms:ms-products")
 include("ms:ms-auth")
+include("ms:commons-event")
+include("ms:ms-orders")
