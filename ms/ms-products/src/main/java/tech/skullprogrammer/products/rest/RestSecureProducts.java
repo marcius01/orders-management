@@ -70,4 +70,11 @@ public class RestSecureProducts {
     public ProductResponseDTO create(@PathParam("productId") Long productId, @Valid StockAdjustmentRequest stockAdjustmentRequest) {
         return serviceProduct.adjustStockQuantity(productId, stockAdjustmentRequest);
     }
+
+//    @GET
+//    @Path("/{productId}/snap")
+//    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+//    public ProductResponseDTO getProductById(@PathParam("productId") Long productId) {
+//
+//    }
 }

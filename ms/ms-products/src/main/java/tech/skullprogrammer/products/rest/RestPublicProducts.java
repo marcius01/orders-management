@@ -1,14 +1,16 @@
 package tech.skullprogrammer.products.rest;
 
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
 import tech.skullprogrammer.framework.core.model.Pager;
+import tech.skullprogrammer.products.messaging.StockAdjustmentFailedProducer;
 import tech.skullprogrammer.products.model.dto.ProductResponseDTO;
 import tech.skullprogrammer.products.service.ServiceProduct;
 
@@ -38,6 +40,13 @@ public class RestPublicProducts {
     @PermitAll
     public ProductResponseDTO product(@PathParam("productId") @PositiveOrZero Long productId) {
         return serviceProduct.getProduct(productId, true);
+    }
+
+    @POST
+    @Path("/")
+    @PermitAll
+    public List<ProductResponseDTO> product(@NotNull @NotEmpty List<Long> productIds) {
+        return serviceProduct.getProducts(productIds, true);
     }
 
 }

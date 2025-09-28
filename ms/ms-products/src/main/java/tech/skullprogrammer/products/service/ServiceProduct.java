@@ -4,6 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import tech.skullprogrammer.products.utils.MapperUtils;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 
 @Slf4j
 @ApplicationScoped
@@ -57,6 +60,10 @@ public class ServiceProduct {
 
     public ProductResponseDTO getProduct(@PositiveOrZero Long productId, Boolean isActive) {
         return mapper.toProductResponse(repositoryProduct.findById(productId, isActive));
+    }
+
+    public List<ProductResponseDTO> getProducts(@NotNull @NotEmpty List<Long> productIds, Boolean isActive) {
+        return mapper.toProductResponse(repositoryProduct.findByIds(productIds, isActive));
     }
 
     @Transactional

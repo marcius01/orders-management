@@ -19,5 +19,18 @@ quarkus.datasource.devservices.reuse=true
 quarkus.datasource.devservices.volumes."/Users/Shared/Temp/lavori_personali/orders_management/volumes/products/data"=/var/lib/postgresql/data
 quarkus.datasource.devservices.image-name=postgres
 
+##KAFKA
+mp.messaging.incoming.orders-in.connector=smallrye-kafka
+kafka.bootstrap.servers=localhost:9092
+##Incoming
+mp.messaging.incoming.orders-in.topic=orders.initiated
+mp.messaging.incoming.orders-in.value.deserializer=tech.skullprogrammer.products.messaging.OrderInitiatedEventDeserializer
+##Outcoming Failure
+mp.messaging.outgoing.orders-out-failure.topic=products.stock-reservation-failed
+mp.messaging.outgoing.orders-out-failure.value.serializer=io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+##Outcoming Success
+mp.messaging.outgoing.orders-out-success.topic=products.stock-reservation-ok
+mp.messaging.outgoing.orders-out-success.value.serializer=io.quarkus.kafka.client.serialization.ObjectMapperSerializer
+
 ##LOGGING
 #quarkus.log.category."<package>.<class>".level=DEBUG

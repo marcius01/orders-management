@@ -5,11 +5,8 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import io.quarkus.panache.common.Page;
 import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import tech.skullprogrammer.framework.core.model.Pager;
 import tech.skullprogrammer.products.model.Product;
-import tech.skullprogrammer.products.model.dto.ProductResponseDTO;
-import tech.skullprogrammer.products.utils.MapperUtils;
 
 import java.util.List;
 
@@ -42,5 +39,19 @@ public class RepositoryProduct implements PanacheRepository<Product> {
             default -> find("id = :id AND active = :active", Parameters.with("id", productId).and("active", isActive));
         };
         return query.firstResult();
+    }
+
+    public List<Product> findByIds(List<Long> ids, Boolean isActive) {
+        PanacheQuery<Product> query = switch (isActive) {
+            case null -> find("id in :ids", Parameters.with("ids", ids));
+            default -> find("id in :ids AND active = :active", Parameters.with("ids", ids).and("active", isActive));
+        };
+        return query.list();
+    }
+
+    public int updateStock(Long productId,  Integer stockDecrement) {
+        return update("stockQuantity = stockQuantity - :stockDecrement " +
+                "Where id = :productId and stockQuantity >= :stockDecrement",
+                Parameters.with("productId", productId).and("stockDecrement", stockDecrement));
     }
 }
