@@ -5,5 +5,8 @@ public enum EOrderStatus {
     PENDING,
     STOCK_RESERVED,
     CANCELED,
+    NO_STOCK,
+    PAID,
+    PAYMENT_FAILED,
     COMPLETED,
 }

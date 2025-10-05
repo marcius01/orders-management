@@ -19,6 +19,7 @@ import tech.skullprogrammer.orders.model.dto.OrderRequestDTO;
 import tech.skullprogrammer.orders.model.dto.OrderResponseDTO;
 import tech.skullprogrammer.orders.model.dto.ProductResponseDTO;
 import tech.skullprogrammer.orders.repositiry.RepositoryOrder;
+import tech.skullprogrammer.orders.utils.MapperUtilsImpl;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,7 +36,8 @@ public class ServiceOrder {
     RepositoryOrder repositoryOrder;
     @Inject
     OrderInitiatedEventProducer orderInitiatedEventProducer;
-
+    @Inject
+    MapperUtilsImpl mapperUtilsImpl;
 
 
     public OrderResponseDTO placeOrder(OrderRequestDTO orderToCreate, Long userId) {
@@ -94,6 +96,20 @@ public class ServiceOrder {
         throw SkullResourceException.builder().error(OrderError.PRODUCT_NOT_FOUND)
                 .payload(GenericErrorPayload.builder().putInfo("Product ids", idsNotReturned).build())
                 .build();
+    }
+
+    @Transactional
+    public OrderResponseDTO virtualDeleteOrder(Long orderToDelete, Long userId, boolean admin) {
+        Order order = null;
+        if(admin) {
+            order = repositoryOrder.findById(orderToDelete);
+        } else {
+            order = repositoryOrder.findByIdAndUserId(orderToDelete, userId).orElse(null);
+        };
+        if (order == null) throw SkullResourceException.builder().error(OrderError.ORDER_NOT_FOUND).build();
+        if (order.getStatus() == EOrderStatus.CANCELED) throw  SkullResourceException.builder().error(OrderError.ORDER_ALREADY_DELETED).build();
+        order.setStatus(EOrderStatus.CANCELED);
+        return mapperUtilsImpl.toOrderResponse(order);
     }
 
 }

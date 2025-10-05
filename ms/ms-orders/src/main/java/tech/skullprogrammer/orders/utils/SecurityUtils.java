@@ -43,4 +43,8 @@ public class SecurityUtils {
             return null; // Email potrebbe essere opzionale
         }
     }
+
+    public boolean isAdmin() {
+        return securityIdentity.hasRole("ROLE_ADMIN");
+    }
 }

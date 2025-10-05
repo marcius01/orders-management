@@ -22,15 +22,16 @@ public class StockAdjustmentSuccessConsumer {
     @Incoming("in-reservation-success")
     public void consume(StockAdjustmentSuccessEvent successEvent) {
         Order order = findOrder(successEvent);
-        if (order == null) {
-            throw SkullResourceException.builder().error(OrderError.ORDER_NOT_FOUND).build();
-        }
-        order.setStatus(EOrderStatus.STOCK_RESERVED);
         stockConfirmedEventProducer.produceStockConfirmedMessage(order);
     }
 
     @Transactional
     protected Order findOrder(StockAdjustmentSuccessEvent successEvent) {
-        return repositoryOrder.findById(successEvent.getPayload().getOrderId());
+        Order order = repositoryOrder.findById(successEvent.getPayload().getOrderId());
+        if (order == null) {
+            throw SkullResourceException.builder().error(OrderError.ORDER_NOT_FOUND).build();
+        }
+        order.setStatus(EOrderStatus.STOCK_RESERVED);
+        return order;
     }
 }
