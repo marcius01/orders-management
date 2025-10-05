@@ -1,0 +1,15 @@
+meta {
+  name: Delete Order
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8000/api/v1/orders/secure/3751
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
