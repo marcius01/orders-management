@@ -12,10 +12,10 @@ public class ForwardAuthHeader implements ClientHeadersFactory {
     public MultivaluedMap<String, String> update(
             MultivaluedMap<String, String> incoming,
             MultivaluedMap<String, String> outgoing) {
-        log.info("Start - Forward auth header");
+        log.trace("Start - Forward auth header");
         var auth = incoming.getFirst("Authorization");
         if (auth != null) outgoing.putSingle("Authorization", auth);
-        log.info("End - Forward auth header");
+        log.trace("End - Forward auth header");
         return outgoing;
     }
 }

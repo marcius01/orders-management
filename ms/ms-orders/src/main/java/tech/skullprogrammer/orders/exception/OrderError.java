@@ -13,6 +13,8 @@ public enum OrderError implements ISkullError.App
     UNAUTHORIZED(HttpResponseStatus.UNAUTHORIZED.code()),
     ORDER_NOT_FOUND(HttpResponseStatus.NOT_FOUND.code()),
     ORDER_ALREADY_DELETED(HttpResponseStatus.GONE.code()),
+    ORDER_ALREADY_PAID(HttpResponseStatus.CONFLICT.code()),
+    ORDER_NOT_PAYBLE(HttpResponseStatus.CONFLICT.code()),
     PRODUCT_NOT_FOUND(HttpResponseStatus.NOT_FOUND.code());
 
     private final int status;

@@ -1,0 +1,15 @@
+package tech.skullprogrammer.orders.model.dto;
+
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
+@RegisterForReflection
+@Builder
+@Getter
+@Setter
+public class PaymentResponseDTO {
+
+    private String paymentURL;
+}

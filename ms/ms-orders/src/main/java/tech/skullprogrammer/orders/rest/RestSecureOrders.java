@@ -1,18 +1,16 @@
 package tech.skullprogrammer.orders.rest;
 
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import lombok.extern.slf4j.Slf4j;
+import tech.skullprogrammer.orders.model.dto.OrderPaymentResponseDTO;
 import tech.skullprogrammer.orders.model.dto.OrderRequestDTO;
 import tech.skullprogrammer.orders.model.dto.OrderResponseDTO;
 import tech.skullprogrammer.orders.service.ServiceOrder;
 import tech.skullprogrammer.orders.utils.SecurityUtils;
-
-import java.util.Set;
 
 @Path("/secure")
 @Slf4j
@@ -29,17 +27,26 @@ public class RestSecureOrders {
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     public OrderResponseDTO create(@Valid OrderRequestDTO orderToCreate) {
         Long userId = securityUtils.getCurrentUserId();
-        log.info("Creating order {} for user {}", orderToCreate, userId);
+        log.debug("Creating order {} for user {}", orderToCreate, userId);
         return serviceOrder.placeOrder(orderToCreate, userId);
     }
 
     @DELETE
     @Path("/{id}")
     @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
-    public OrderResponseDTO create(@PathParam("id") Long orderToDelete) {
+    public OrderResponseDTO delete(@PathParam("id") Long orderToDelete) {
         Long userId = securityUtils.getCurrentUserId();
-        log.info("Virtual Delete of the order {} for user {}", orderToDelete, userId);
+        log.debug("Virtual Delete of the order {} for user {}", orderToDelete, userId);
         return serviceOrder.virtualDeleteOrder(orderToDelete, userId, securityUtils.isAdmin());
+    }
+
+    @GET
+    @Path("/{id}/payment-session")
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+    public OrderPaymentResponseDTO getPaymentSession(@PathParam("id") Long orderId) {
+        Long userId = securityUtils.getCurrentUserId();
+        log.debug("Get payment session for order {} by user {}", orderId, userId);
+        return serviceOrder.getPaymentSession(orderId, userId, securityUtils.isAdmin());
     }
 
 }
