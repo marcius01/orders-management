@@ -24,6 +24,14 @@ curl -i -X POST http://localhost:8001/services \
   --data name=public-order-service \
   --data url='http://host.docker.internal:8082/public'
 
+curl -i -X POST http://localhost:8001/services \
+  --data name=secure-payment-service \
+  --data url='http://host.docker.internal:8083/secure'
+
+curl -i -X POST http://localhost:8001/services \
+  --data name=public-payment-service \
+  --data url='http://host.docker.internal:8083/public'
+
 ## Add Route
 
 curl -i -X POST http://localhost:8001/services/secure-auth-service/routes \
@@ -50,6 +58,14 @@ curl -i -X POST http://localhost:8001/services/public-order-service/routes \
   --data name=public-order-route \
   --data 'paths[]=/api/v1/orders/public'
 
+curl -i -X POST http://localhost:8001/services/secure-payment-service/routes \
+  --data name=secure-payment-route \
+  --data 'paths[]=/api/v1/payment/secure'
+
+curl -i -X POST http://localhost:8001/services/public-payment-service/routes \
+  --data name=public-payment-route \
+  --data 'paths[]=/api/v1/payment/public'
+
 ## JWT Consumer Creation
 
 curl -i -X POST http://localhost:8001/consumers \
@@ -75,6 +91,9 @@ curl -i -X POST http://localhost:8001/services/secure-product-service/plugins \
   --data "config.claims_to_headers=sub:X-User-Id,groups:X-User-Groups"
 
 curl -i -X POST http://localhost:8001/services/secure-order-service/plugins \
+--data "name=jwt"
+
+curl -i -X POST http://localhost:8001/services/secure-payment-service/plugins \
 --data "name=jwt"
 
 ## Transformer can't extract claims from jwt token
