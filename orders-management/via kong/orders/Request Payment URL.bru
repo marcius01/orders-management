@@ -1,0 +1,22 @@
+meta {
+  name: Request Payment URL
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8000/api/v1/orders/secure/1/payment-session
+  body: none
+  auth: inherit
+}
+
+body:json {
+  {
+    "orderId": 1,
+    "amount": 200000
+  }
+}
+
+settings {
+  encodeUrl: true
+}

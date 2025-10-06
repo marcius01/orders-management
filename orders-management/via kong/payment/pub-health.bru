@@ -1,0 +1,15 @@
+meta {
+  name: pub-health
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8000/api/v1/payment/public/health
+  body: none
+  auth: none
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,19 @@
+meta {
+  name: sec-stripe
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8000/api/v1/payment/secure/stripe-out
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {}
+}
+
+settings {
+  encodeUrl: true
+}
